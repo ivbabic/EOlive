@@ -45,7 +45,7 @@ const tableIcons = {
 
 function OPGinfo() {
     var columns = [
-        { title: "pk", field: "pk", hidden: true},
+        { title: "id", field: "id", hidden: true},
         { title: "Katastarke čestice", field: "katastar" },
         { title: "Naselje", field: "naselje" },
         { title: "Površina", field: "povrsina" },
