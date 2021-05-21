@@ -104,3 +104,14 @@ export const authCheckState = () => {
         }
     }
 }
+
+export const getUserId = (User_id) => {
+    return dispatch => {
+        const User_id = localStorage.getItem('id');
+        if (User_id === undefined) {
+            dispatch(logout());
+        } else {
+            localStorage.setItem('id', User_id);
+        }
+    }
+}   

@@ -13,7 +13,7 @@ import axios from "axios";
         { title: 'Doprinos Ulja', field: 'doprinosulja' }
     ]
     useEffect(() => {
-      axios.get('http://127.0.0.1:8000/Api/Berba/')
+      axios.get('http://127.0.0.1:8000/api/Berba/')
         .then(resp => resp.json())
         .then(resp => {
           setData(resp)

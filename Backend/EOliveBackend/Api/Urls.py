@@ -1,8 +1,6 @@
 from django.urls import path
 from django.conf.urls import url
-from EOliveBackend.models import  evidencijagospodarstva, berba, podaci_radnje, prihranjivanje, spricanje
-from django.contrib.auth.models import User
-from .views import  userListView, userDetailView, evidencijagospodarstvaListView, berbaListView, podaci_radnjeListView, prihranjivanjeListView, spricanjeListView, evidencijagospodarstvaDetailView, berbaDetailView, podaci_radnjeDetailView, prihranjivanjeDetailView, spricanjeDetailView
+from .views import  *
 from rest_framework.urlpatterns import format_suffix_patterns
 
 

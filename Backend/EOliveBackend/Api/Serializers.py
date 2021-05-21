@@ -12,19 +12,19 @@ class UserSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.ModelSerializer):
 
     def get_user(self, obj):
-        User = self.context['request'].user.id
+        User_id = self.context['request'].User.id
         print(User)
-        return User
+        return User_id
 
-    user = serializers.SerializerMethodField('get_user')
+    User = serializers.SerializerMethodField('get_user')
     class Meta:
         model = Token
-        fields = ('key', 'user') 
+        fields = ('key', 'User_id') 
 
 class evidencijagospodarstvaSerializer(serializers.ModelSerializer): 
     class Meta:
         model = evidencijagospodarstva
-        fields = ('katastar', 'naselje', 'povrsina', 'naziv_gosp', 'User')
+        fields = ('id', 'katastar', 'naselje', 'povrsina', 'naziv_gosp', 'User_id')
 
 class berbaSerializer(serializers.ModelSerializer):
     class Meta:

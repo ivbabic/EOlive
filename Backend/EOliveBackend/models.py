@@ -10,7 +10,7 @@ class evidencijagospodarstva(models.Model):
     id = models.AutoField(primary_key=True)
     katastar = models.CharField(max_length=120)
     naselje = models.CharField(max_length=50)
-    povrsina = models.IntegerField()
+    povrsina = models.CharField(max_length=50)
     naziv_gosp = models.CharField(max_length=30)
     User= models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.CASCADE)    
    
