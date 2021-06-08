@@ -58,8 +58,14 @@ function OPGinfo() {
     const [iserror, setIserror] = useState(false)
     const [errorMessages, setErrorMessages] = useState([])
 
+
     useEffect(() => { 
-      axios.get("http://127.0.0.1:8000/api/Evidencija/")
+      axios.get("http://127.0.0.1:8000/api/Evidencija/", {
+        headers: {
+          token: localStorage.getItem('token'),
+          id: localStorage.getItem('id')
+        }
+      })
          .then(res => {               
               setData(res.data)
           })
@@ -212,11 +218,11 @@ function OPGinfo() {
       </div>
     );
   }
-  //const mapDispatchToProps = dispatch => {
-   // return {
-       // onAuth: (User_id) => dispatch(actions.getUserId(User_id)) 
-    //}
-  //}
+  const mapDispatchToProps = dispatch => {
+    return {
+        onAuth: () => dispatch(actions.authCheckState()) 
+    }
+  }
   
   
   export default OPGinfo;

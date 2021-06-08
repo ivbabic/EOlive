@@ -11,11 +11,12 @@ from rest_framework.generics import (
     UpdateAPIView
 )
 from rest_framework import status
-from rest_framework.decorators import api_view, permission_classes
-from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from django.contrib.auth.models import User
-from EOliveBackend.models import evidencijagospodarstva
+from EOliveBackend.models import evidencijagospodarstva, berba, podaci_radnje, prihranjivanje, spricanje
 from .Serializers import *
+from rest_framework.permissions import IsAuthenticated
+
 
 def get_queryset(self):
     user = self.request.User
@@ -43,13 +44,13 @@ def userListView(request, format=None):
 @permission_classes((permissions.AllowAny,))
 def userDetailView(request, pk, format=None):
     try:
-        User = User.objects.get(pk=pk)
+        user = User.objects.get(pk=pk)
     except User.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
     if request.method == 'PUT':
-        serializer = UserSerializer(User, data=request.data,context={'request': request})
+        serializer = UserSerializer(User, data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -59,12 +60,9 @@ def userDetailView(request, pk, format=None):
         User.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.AllowAny,))
-def evidencijagospodarstvaListView(request, format=None):
-    
-
+@permission_classes([IsAuthenticated])
+def EvidencijagospodarstvaListView(request, format=None):
     if request.method == 'GET':
         data = evidencijagospodarstva.objects.all()
         serializer = evidencijagospodarstvaSerializer(data, context={'request': request}, many=True)
@@ -78,27 +76,29 @@ def evidencijagospodarstvaListView(request, format=None):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
-def evidencijagospodarstvaDetailView(request, pk, format=None):
+@permission_classes([IsAuthenticated])
+def EvidencijagospodarstvaDetailView(request, pk, format=None):
     try:
-        evidencijagospodarstva = evidencijagospodarstva.objects.get(pk=pk)
-    except evidencijagospodarstva.DoesNotExist:
+        evidencija = evidencijagospodarstva.objects.get(pk=pk)
+    except evidencija.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = evidencijagospodarstvaSerializer(evidencijagospodarstva, data=request.data, context={'request': request})
+        evidencija.delete()
+        serializer = evidencijagospodarstvaSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        evidencijagospodarstva.delete()
+        evidencija.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.AllowAny,))
-def berbaListView(request, format=None):
+@permission_classes((permissions.IsAuthenticated))
+def BerbaListView(request, format=None):
 
     if request.method == 'GET':
         data = berba.objects.all()
@@ -115,26 +115,26 @@ def berbaListView(request, format=None):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes((permissions.IsAuthenticated,))
-def berbaDetailView(request, pk, format=None):
+def BerbaDetailView(request, pk, format=None):
     try:
-        berba = berba.objects.get(pk=pk)
-    except berba.DoesNotExist:
+        Ber = berba.objects.get(pk=pk)
+    except Ber.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = berbaSerializer(berba, data=request.data,context={'request': request})
+        serializer = berbaSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        berba.delete()
+        Ber.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.IsAuthenticated,))
-def podaci_radnjeListView(request, format=None):
+def Podaci_radnjeListView(request, format=None):
 
     if request.method == 'GET':
         data = podaci_radnje.objects.all()
@@ -151,26 +151,26 @@ def podaci_radnjeListView(request, format=None):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes((permissions.IsAuthenticated,))
-def podaci_radnjeDetailView(request, pk, format=None):
+def Podaci_radnjeDetailView(request, pk, format=None):
     try:
-        podaci_radnje = podaci_radnje.objects.get(pk=pk)
-    except podaci_radnje.DoesNotExist:
+        podaci = podaci_radnje.objects.get(pk=pk)
+    except podaci.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = podaci_radnjeSerializer(podaci_radnje, data=request.data,context={'request': request})
+        serializer = podaci_radnjeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        podaci_radnje.delete()
+        podaci.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.IsAuthenticated,))
-def prihranjivanjeListView(request, format=None):
+def PrihranjivanjeListView(request, format=None):
 
     if request.method == 'GET':
         data = prihranjivanje.objects.all()
@@ -187,26 +187,26 @@ def prihranjivanjeListView(request, format=None):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes((permissions.IsAuthenticated,))
-def prihranjivanjeDetailView(request, pk, format=None):
+def PrihranjivanjeDetailView(request, pk, format=None):
     try:
-        prihranjivanje = prihranjivanje.objects.get(pk=pk)
-    except prihranjivanje.DoesNotExist:
+        prihrana = prihranjivanje.objects.get(pk=pk)
+    except prihrana.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = prihranjivanjeSerializer(prihranjivanje, data=request.data,context={'request': request})
+        serializer = prihranjivanjeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        prihranjivanje.delete()
+        prihrana.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
 @permission_classes((permissions.IsAuthenticated,))
-def spricanjeListView(request, format=None):
+def SpricanjeListView(request, format=None):
 
     if request.method == 'GET':
         data = spricanje.objects.all()
@@ -223,19 +223,19 @@ def spricanjeListView(request, format=None):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes((permissions.IsAuthenticated,))
-def spricanjeDetailView(request, pk, format=None):
+def SpricanjeDetailView(request, pk, format=None):
     try:
-        spricanje = spricanje.objects.get(pk=pk)
-    except spricanje.DoesNotExist:
+        spric = spricanje.objects.get(pk=pk)
+    except spric.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'PUT':
-        serializer = spricanjeSerializer(spricanje,  data=request.data,context={'request': request})
+        serializer = spricanjeSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     elif request.method == 'DELETE':
-        spricanje.delete()
+        spric.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

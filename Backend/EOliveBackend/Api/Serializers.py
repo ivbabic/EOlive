@@ -1,3 +1,4 @@
+
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from EOliveBackend.models import  evidencijagospodarstva, berba, podaci_radnje, prihranjivanje, spricanje
@@ -7,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'id']
+        fields = ['token', 'username', 'email', 'id']
 
 class TokenSerializer(serializers.ModelSerializer):
 
@@ -19,7 +20,7 @@ class TokenSerializer(serializers.ModelSerializer):
     User = serializers.SerializerMethodField('get_user')
     class Meta:
         model = Token
-        fields = ('key', 'User_id') 
+        fields = ('token', 'User_id')
 
 class evidencijagospodarstvaSerializer(serializers.ModelSerializer): 
     class Meta:
