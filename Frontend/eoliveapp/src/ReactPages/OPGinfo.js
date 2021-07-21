@@ -43,6 +43,7 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
+
 function OPGinfo() {
     var columns = [
         { title: "id", field: "id", hidden: true},
@@ -50,25 +51,24 @@ function OPGinfo() {
         { title: "Naselje", field: "naselje" },
         { title: "Površina", field: "povrsina" },
         { title: "Naziv Gospodarstva", field: "naziv_gosp" },
-        { title: "Korisnik", field: "User_id" }
+        { title: "Korisnik", field: "User_id", hidden: true }
     ]
     const [data, setData] = useState([]); //table data
 
     //for error handling
     const [iserror, setIserror] = useState(false)
     const [errorMessages, setErrorMessages] = useState([])
-
+    const auth = localStorage.getItem('token')
+    const User = localStorage.getItem('id')
 
     useEffect(() => { 
-      axios.get("http://127.0.0.1:8000/api/Evidencija/", {
-        headers: {
-          token: localStorage.getItem('token'),
-          id: localStorage.getItem('id')
-        }
+      axios.get("http://127.0.0.1:8000/api/Evidencija/", { headers:{
+        'Authorization': `token ${auth}`,
+        },
       })
-         .then(res => {               
+         .then(res =>                
               setData(res.data)
-          })
+          )
           .catch(error=>{
               console.log("Error")
           })
@@ -77,6 +77,7 @@ function OPGinfo() {
     const handleRowUpdate = (newData, oldData, resolve) => {
       //validation
       let errorList = []
+      newData.User_id = User
       if(newData.katastar=== ""){
         errorList.push("Unesite katastarsku česticu")
       }
@@ -91,7 +92,10 @@ function OPGinfo() {
       }
   
       if(errorList.length < 1){
-        axios.put("http://127.0.0.1:8000/api/Evidencija/"+newData.id, newData)
+        axios.put("http://127.0.0.1:8000/api/Evidencija/"+newData.id, newData, { headers:{
+          'Authorization': `token ${auth}`,
+          },
+        })
         .then(res => {
           const dataUpdate = [...data];
           const index = oldData.tableData.id;
@@ -119,6 +123,8 @@ function OPGinfo() {
     const handleRowAdd = (newData, resolve) => {
       //validation
       let errorList = []
+      newData.User_id = User
+      console.log('User', newData.User_id)
       if(newData.katastar === undefined){
         errorList.push("Unesite katastarsku česticu")
       }
@@ -131,13 +137,13 @@ function OPGinfo() {
       if(newData.naziv_gosp === undefined){
         errorList.push("Unesite naziv OPG-a")
       }
-      if(newData.User_id === undefined){
-        errorList.push("Unesite naziv OPG-a")
-      }
   
   
       if(errorList.length < 1){ //no error
-        axios.post("http://127.0.0.1:8000/api/Evidencija/", newData)
+        axios.post("http://127.0.0.1:8000/api/Evidencija/", newData, { headers:{
+          'Authorization': `token ${auth}`,
+          },
+        })
         .then(res => {
           let dataToAdd = [...data];
           dataToAdd.push(newData);
@@ -162,7 +168,10 @@ function OPGinfo() {
   
     const handleRowDelete = (oldData, resolve) => {
       
-      axios.delete("http://127.0.0.1:8000/api/Evidencija/"+oldData.id)
+      axios.delete("http://127.0.0.1:8000/api/Evidencija/"+oldData.id, { headers:{
+        'Authorization': `token ${auth}`,
+        },
+      })
         .then(res => {
           const dataDelete = [...data];
           const index = oldData.tableData.id;
@@ -218,11 +227,17 @@ function OPGinfo() {
       </div>
     );
   }
+
+  const mapStateToProps = (state) => {
+    return {
+        loading: state.loading
+    }
+  }
   const mapDispatchToProps = dispatch => {
     return {
-        onAuth: () => dispatch(actions.authCheckState()) 
+        handleRowAdd: () => dispatch(actions.checkUser()) 
     }
   }
   
   
-  export default OPGinfo;
+  export default connect(mapStateToProps, mapDispatchToProps)(OPGinfo);

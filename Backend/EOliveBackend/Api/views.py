@@ -22,9 +22,14 @@ def get_queryset(self):
     user = self.request.User
     return user.accounts.all()
 
-
+@api_view(['GET'])
+def Get_user_id (request):
+    if request.method == 'GET':
+        current_user = request.user
+        return Response(current_user.id)
+     
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.AllowAny,))
+@permission_classes([IsAuthenticated])
 def userListView(request, format=None):
 
     if request.method == 'GET':
@@ -41,7 +46,7 @@ def userListView(request, format=None):
 
 
 @api_view(['PUT', 'DELETE'])
-@permission_classes((permissions.AllowAny,))
+@permission_classes([IsAuthenticated])
 def userDetailView(request, pk, format=None):
     try:
         user = User.objects.get(pk=pk)
@@ -97,7 +102,7 @@ def EvidencijagospodarstvaDetailView(request, pk, format=None):
 
 
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.IsAuthenticated))
+@permission_classes([IsAuthenticated])
 def BerbaListView(request, format=None):
 
     if request.method == 'GET':
@@ -114,7 +119,7 @@ def BerbaListView(request, format=None):
 
 
 @api_view(['PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def BerbaDetailView(request, pk, format=None):
     try:
         Ber = berba.objects.get(pk=pk)
@@ -133,7 +138,7 @@ def BerbaDetailView(request, pk, format=None):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def Podaci_radnjeListView(request, format=None):
 
     if request.method == 'GET':
@@ -150,7 +155,7 @@ def Podaci_radnjeListView(request, format=None):
 
 
 @api_view(['PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def Podaci_radnjeDetailView(request, pk, format=None):
     try:
         podaci = podaci_radnje.objects.get(pk=pk)
@@ -169,7 +174,7 @@ def Podaci_radnjeDetailView(request, pk, format=None):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def PrihranjivanjeListView(request, format=None):
 
     if request.method == 'GET':
@@ -186,7 +191,7 @@ def PrihranjivanjeListView(request, format=None):
 
 
 @api_view(['PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def PrihranjivanjeDetailView(request, pk, format=None):
     try:
         prihrana = prihranjivanje.objects.get(pk=pk)
@@ -205,7 +210,7 @@ def PrihranjivanjeDetailView(request, pk, format=None):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET', 'POST'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def SpricanjeListView(request, format=None):
 
     if request.method == 'GET':
@@ -222,7 +227,7 @@ def SpricanjeListView(request, format=None):
 
 
 @api_view(['PUT', 'DELETE'])
-@permission_classes((permissions.IsAuthenticated,))
+@permission_classes([IsAuthenticated])
 def SpricanjeDetailView(request, pk, format=None):
     try:
         spric = spricanje.objects.get(pk=pk)

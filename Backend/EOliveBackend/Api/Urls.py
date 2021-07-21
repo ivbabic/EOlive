@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf.urls import url
 from .views import  *
 from rest_framework.urlpatterns import format_suffix_patterns
-from rest_framework.authtoken import views
+
 
 urlpatterns = [
     path('User/', userListView),
@@ -17,7 +17,7 @@ urlpatterns = [
     path('Prihranjivanje/<int:pk>', PrihranjivanjeDetailView),
     path('Spricanje/', SpricanjeListView),
     path('Spricanje/<int:pk>', SpricanjeDetailView),
-    path('api-token-auth/', views.obtain_auth_token)
+    path('currentUser/', Get_user_id )
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

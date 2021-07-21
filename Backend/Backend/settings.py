@@ -111,7 +111,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'EOliveBackend.Api.Serializers.MyCustomTokenSerializer',
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -144,7 +146,7 @@ STATIC_URL = '/static/'
 CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST =(
-    'localhost:3000',
+    'https://localhost:3000',
 
 )
 

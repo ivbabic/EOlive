@@ -43,15 +43,13 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
 
-function Berba() {
+function Radnje() {
     var columns = [
         { title: "id", field: "id", hidden: true},
-        { title: "Sorta Masline", field: "vrstamaslina" },
-        { title: "Datum Berbe", field: "datumb" },
+        { title: "Radnja", field: "vrstaradnje" },
         { title: "Katastarska čestica", field: "katcest" },
-        { title: "Količina ubranog", field: "kolicinaubrano" },
-        { title: "Dopprinos ulja", field: "doprinosulja" },
-        { title: "OPG", field:"evidencijagospodarstva_id"}
+        { title: "Datum", field: "datum" },
+        { title: "OPG", field: "evidencijagospodarstva_id" }
     ]
     const [data, setData] = useState([]); //table data
 
@@ -62,7 +60,7 @@ function Berba() {
 
 
     useEffect(() => { 
-      axios.get("http://127.0.0.1:8000/api/Berba/", { headers:{
+      axios.get("http://127.0.0.1:8000/api/PodaciRadnje/", { headers:{
         'Authorization': `token ${auth}`,
         },
       })
@@ -77,27 +75,21 @@ function Berba() {
     const handleRowUpdate = (newData, oldData, resolve) => {
       //validation
       let errorList = []
-      if(newData.vrstamaslina === ""){
-        errorList.push("Unesite sortu masline")
-      }
-      if(newData.datumb === ""){
-        errorList.push("Unesite datum format: YYYY-MM-DD")
+      if(newData.vrstaradnje === ""){
+        errorList.push("Unesite radnju")
       }
       if(newData.katcest === ""){
         errorList.push("Unesite katastarsku česticu")
       }
-      if(newData.kolicinaubrano === ""){
-        errorList.push("Unesite naziv količinu ubrane masline u KG")
-      }
-      if(newData.doprinosulja === ""){
-        errorList.push("Unesite doprinos ulja po 100kg maslina")
+      if(newData.datum === ""){
+        errorList.push("Unesite datum format:")
       }
       if(newData.evidencijagospodarstva_id === ""){
         errorList.push("Unesite naziv gospodarstva")
       }
   
       if(errorList.length < 1){
-        axios.put("http://127.0.0.1:8000/api/Berba/"+newData.id, newData, { headers:{
+        axios.put("http://127.0.0.1:8000/api/PodaciRadnje/"+newData.id, newData, { headers:{
           'Authorization': `token ${auth}`,
           },
         })
@@ -128,20 +120,14 @@ function Berba() {
     const handleRowAdd = (newData, resolve) => {
       //validation
       let errorList = []
-      if(newData.vrstamaslina === undefined){
-        errorList.push("Unesite sortu masline")
-      }
-      if(newData.datumb === undefined){
-        errorList.push("Unesite datum format:")
+      if(newData.vrstaradnje === undefined){
+        errorList.push("Unesite vrstu radnje")
       }
       if(newData.katcest === undefined){
         errorList.push("Unesite katastarsku česticu")
       }
-      if(newData.kolicinaubrano === undefined){
-        errorList.push("Unesite naziv količinu ubrane masline u KG")
-      }
-      if(newData.doprinosulja === undefined){
-        errorList.push("Unesite doprinos ulja po 100kg maslina")
+      if(newData.datum === undefined){
+        errorList.push("Unesite datum format:")
       }
       if(newData.evidencijagospodarstva_id === undefined){
         errorList.push("Unesite naziv gospodarstva")
@@ -150,10 +136,10 @@ function Berba() {
   
   
       if(errorList.length < 1){ //no error
-        axios.post("http://127.0.0.1:8000/api/Berba/", newData,{ headers:{
+        axios.post("http://127.0.0.1:8000/api/PodaciRadnje/",{ headers:{
           'Authorization': `token ${auth}`,
           },
-        })
+        }, newData)
         .then(res => {
           let dataToAdd = [...data];
           dataToAdd.push(newData);
@@ -178,7 +164,7 @@ function Berba() {
   
     const handleRowDelete = (oldData, resolve) => {
       
-      axios.delete("http://127.0.0.1:8000/api/Berba/"+oldData.id, { headers:{
+      axios.delete("http://127.0.0.1:8000/api/PodaciRadnje/"+oldData.id, { headers:{
         'Authorization': `token ${auth}`,
         },
       })
@@ -244,4 +230,4 @@ function Berba() {
   }
   
   
-  export default Berba;
+  export default Radnje;
