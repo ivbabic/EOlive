@@ -87,7 +87,7 @@ export const authSignup = (username, email, password1, password2) => {
             localStorage.setItem('id', id);
             localStorage.setItem('expirationDate', expirationDate);
             dispatch(authSuccess(token, id));
-            dispatch(checkAuthTimeout(3600));
+            dispatch(checkAuthTimeout(36000));
         })
             .catch(error => {
                 dispatch(authFail(error))
@@ -110,6 +110,7 @@ export const getUserId = () => {
     }
 }
 
+
 export const authCheckState = () => {
     return dispatch => {
         const token = localStorage.getItem('token');
@@ -130,4 +131,3 @@ export const authCheckState = () => {
         }
     }
 }
-

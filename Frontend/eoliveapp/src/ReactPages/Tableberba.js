@@ -51,7 +51,7 @@ function Berba() {
         { title: "Katastarska čestica", field: "katcest" },
         { title: "Količina ubranog", field: "kolicinaubrano" },
         { title: "Dopprinos ulja", field: "doprinosulja" },
-        { title: "OPG", field:"evidencijagospodarstva_id"}
+        { title: "Korisnik", field: "User_id", hidden: true }
     ]
     const [data, setData] = useState([]); //table data
 
@@ -59,6 +59,7 @@ function Berba() {
     const [iserror, setIserror] = useState(false)
     const [errorMessages, setErrorMessages] = useState([])
     const auth = localStorage.getItem('token')
+    const User = localStorage.getItem('id')
 
 
     useEffect(() => { 
@@ -70,13 +71,15 @@ function Berba() {
               setData(res.data)
           })
           .catch(error=>{
-              console.log("Error")
+              console.log(error)
           })
-    }, [])
+    },[])
+
 
     const handleRowUpdate = (newData, oldData, resolve) => {
       //validation
       let errorList = []
+      newData.User_id = User
       if(newData.vrstamaslina === ""){
         errorList.push("Unesite sortu masline")
       }
@@ -92,7 +95,7 @@ function Berba() {
       if(newData.doprinosulja === ""){
         errorList.push("Unesite doprinos ulja po 100kg maslina")
       }
-      if(newData.evidencijagospodarstva_id === ""){
+      if(newData.naziv_gosp === ""){
         errorList.push("Unesite naziv gospodarstva")
       }
   
@@ -128,11 +131,12 @@ function Berba() {
     const handleRowAdd = (newData, resolve) => {
       //validation
       let errorList = []
+      newData.User_id = User
       if(newData.vrstamaslina === undefined){
         errorList.push("Unesite sortu masline")
       }
       if(newData.datumb === undefined){
-        errorList.push("Unesite datum format:")
+        errorList.push("Unesite datum format:YYYY-MM-DD")
       }
       if(newData.katcest === undefined){
         errorList.push("Unesite katastarsku česticu")
@@ -143,10 +147,6 @@ function Berba() {
       if(newData.doprinosulja === undefined){
         errorList.push("Unesite doprinos ulja po 100kg maslina")
       }
-      if(newData.evidencijagospodarstva_id === undefined){
-        errorList.push("Unesite naziv gospodarstva")
-      }
-  
   
   
       if(errorList.length < 1){ //no error
@@ -236,12 +236,9 @@ function Berba() {
         </Grid>
       </div>
     );
-  }
-  const mapDispatchToProps = dispatch => {
-    return {
-        onAuth: () => dispatch(actions.authCheckState()) 
-    }
-  }
+}
+
   
   
-  export default Berba;
+export default Berba;
+

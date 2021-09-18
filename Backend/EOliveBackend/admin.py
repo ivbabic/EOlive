@@ -1,8 +1,5 @@
 from django.contrib import admin
-from .models import evidencijagospodarstva, berba, podaci_radnje, prihranjivanje, spricanje
+from .models import Evidencijagospodarstva, Berba
 
-admin.site.register(evidencijagospodarstva)
-admin.site.register(berba)
-admin.site.register(podaci_radnje)
-admin.site.register(prihranjivanje)
-admin.site.register(spricanje)
+admin.site.register(Evidencijagospodarstva)
+admin.site.register(Berba)

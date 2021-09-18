@@ -47,10 +47,11 @@ const tableIcons = {
 function OPGinfo() {
     var columns = [
         { title: "id", field: "id", hidden: true},
-        { title: "Katastarke čestice", field: "katastar" },
-        { title: "Naselje", field: "naselje" },
-        { title: "Površina", field: "povrsina" },
         { title: "Naziv Gospodarstva", field: "naziv_gosp" },
+        { title: "Katastarke čestice", field: "katastar" },
+        { title: "Površina", field: "povrsina" },
+        { title: "Datum Radnje", field: "datum" },
+        { title: "Opis Radnje", field: "opis_radnje" },
         { title: "Korisnik", field: "User_id", hidden: true }
     ]
     const [data, setData] = useState([]); //table data
@@ -66,29 +67,34 @@ function OPGinfo() {
         'Authorization': `token ${auth}`,
         },
       })
-         .then(res =>                
+         .then(res =>{                
               setData(res.data)
-          )
+          })
           .catch(error=>{
               console.log("Error")
           })
-    }, [])
+    },[])
+
+
 
     const handleRowUpdate = (newData, oldData, resolve) => {
       //validation
       let errorList = []
       newData.User_id = User
+      if(newData.naziv_gosp === ""){
+        errorList.push("Unesite naziv OPG-a")
+      }
       if(newData.katastar=== ""){
         errorList.push("Unesite katastarsku česticu")
-      }
-      if(newData.naselje === ""){
-        errorList.push("Unesite naselje")
       }
       if(newData.povrsina === ""){
         errorList.push("Unesite površinu")
       }
-      if(newData.naziv_gosp === ""){
-        errorList.push("Unesite naziv OPG-a")
+      if(newData.datum === undefined){
+        errorList.push("Unesite datum format:YYYY-MM-DD")
+      }
+      if(newData.opis_radnje === ""){
+        errorList.push("Unesite kratak opis radnje")
       }
   
       if(errorList.length < 1){
@@ -125,17 +131,20 @@ function OPGinfo() {
       let errorList = []
       newData.User_id = User
       console.log('User', newData.User_id)
+      if(newData.naziv_gosp === ""){
+        errorList.push("Unesite naziv OPG-a")
+      }
       if(newData.katastar === undefined){
         errorList.push("Unesite katastarsku česticu")
-      }
-      if(newData.naselje === undefined){
-        errorList.push("Unesite naselje")
       }
       if(newData.povrsina === undefined){
         errorList.push("Unesite površinu")
       }
-      if(newData.naziv_gosp === undefined){
-        errorList.push("Unesite naziv OPG-a")
+      if(newData.datum === undefined){
+        errorList.push("Unesite datum format:YYYY-MM-DD")
+      }
+      if(newData.opis_radnje === undefined){
+        errorList.push("Unesite kratak opis radnje")
       }
   
   
